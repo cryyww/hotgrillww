@@ -9,104 +9,109 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as EstoqueRouteImport } from './routes/estoque'
-import { Route as FinanceiroRouteImport } from './routes/financeiro'
-import { Route as RelatoriosRouteImport } from './routes/relatorios'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated/estoque'
+import { Route as AuthenticatedFinanceiroRouteImport } from './routes/_authenticated/financeiro'
+import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated/relatorios'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/_authenticated/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EstoqueRoute = EstoqueRouteImport.update({
-  id: '/estoque',
+const AuthenticatedEstoqueRoute = AuthenticatedEstoqueRouteImport.update({
+  id: '/_authenticated/estoque',
   path: '/estoque',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FinanceiroRoute = FinanceiroRouteImport.update({
-  id: '/financeiro',
+const AuthenticatedFinanceiroRoute = AuthenticatedFinanceiroRouteImport.update({
+  id: '/_authenticated/financeiro',
   path: '/financeiro',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RelatoriosRoute = RelatoriosRouteImport.update({
-  id: '/relatorios',
+const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
+  id: '/_authenticated/relatorios',
   path: '/relatorios',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/estoque': typeof EstoqueRoute
-  '/financeiro': typeof FinanceiroRoute
-  '/relatorios': typeof RelatoriosRoute
+  '/estoque': typeof AuthenticatedEstoqueRoute
+  '/financeiro': typeof AuthenticatedFinanceiroRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/estoque': typeof EstoqueRoute
-  '/financeiro': typeof FinanceiroRoute
-  '/relatorios': typeof RelatoriosRoute
+  '/estoque': typeof AuthenticatedEstoqueRoute
+  '/financeiro': typeof AuthenticatedFinanceiroRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/estoque': typeof EstoqueRoute
-  '/financeiro': typeof FinanceiroRoute
-  '/relatorios': typeof RelatoriosRoute
+  '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
+  '/_authenticated/financeiro': typeof AuthenticatedFinanceiroRoute
+  '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/estoque' | '/financeiro' | '/relatorios'
+  fullPaths: '/estoque' | '/financeiro' | '/relatorios' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/estoque' | '/financeiro' | '/relatorios'
-  id: '__root__' | '/' | '/estoque' | '/financeiro' | '/relatorios'
+  to: '/estoque' | '/financeiro' | '/relatorios' | '/'
+  id:
+    | '__root__'
+    | '/_authenticated/estoque'
+    | '/_authenticated/financeiro'
+    | '/_authenticated/relatorios'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  EstoqueRoute: typeof EstoqueRoute
-  FinanceiroRoute: typeof FinanceiroRoute
-  RelatoriosRoute: typeof RelatoriosRoute
+  AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
+  AuthenticatedFinanceiroRoute: typeof AuthenticatedFinanceiroRoute
+  AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/estoque': {
-      id: '/estoque'
+    '/_authenticated/estoque': {
+      id: '/_authenticated/estoque'
       path: '/estoque'
       fullPath: '/estoque'
-      preLoaderRoute: typeof EstoqueRouteImport
+      preLoaderRoute: typeof AuthenticatedEstoqueRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/financeiro': {
-      id: '/financeiro'
+    '/_authenticated/financeiro': {
+      id: '/_authenticated/financeiro'
       path: '/financeiro'
       fullPath: '/financeiro'
-      preLoaderRoute: typeof FinanceiroRouteImport
+      preLoaderRoute: typeof AuthenticatedFinanceiroRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/relatorios': {
-      id: '/relatorios'
+    '/_authenticated/relatorios': {
+      id: '/_authenticated/relatorios'
       path: '/relatorios'
       fullPath: '/relatorios'
-      preLoaderRoute: typeof RelatoriosRouteImport
+      preLoaderRoute: typeof AuthenticatedRelatoriosRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  EstoqueRoute: EstoqueRoute,
-  FinanceiroRoute: FinanceiroRoute,
-  RelatoriosRoute: RelatoriosRoute,
+  AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
+  AuthenticatedFinanceiroRoute: AuthenticatedFinanceiroRoute,
+  AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
