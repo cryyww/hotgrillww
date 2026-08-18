@@ -3,7 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { AlertTriangle, Boxes, PackageOpen, Wallet } from "lucide-react";
+
 import { supabase } from "@/integrations/supabase/client";
+import { KpiCard } from "@/components/kpi-card";
+import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,10 +40,8 @@ export const Route = createFileRoute("/_authenticated/estoque")({
 
 function EstoquePage() {
   const qc = useQueryClient();
-  const { data: ingredientes = [] } = useQuery({
-    queryKey: ["ingredientes"],
-    queryFn: fetchIngredientes,
-  });
+  const ingredientesQ = useQuery({ queryKey: ["ingredientes"], queryFn: fetchIngredientes });
+  const ingredientes = ingredientesQ.data ?? [];
 
   const [nome, setNome] = useState("");
   const [unidade, setUnidade] = useState<string>("un");
@@ -134,14 +136,37 @@ function EstoquePage() {
     0,
   );
 
+  const emAlerta = ingredientes.filter(
+    (i) => Number(i.quantidade_atual) <= Number(i.estoque_minimo),
+  ).length;
+
+  if (ingredientesQ.isError) {
+    return <ErrorState error={ingredientesQ.error} onRetry={() => ingredientesQ.refetch()} />;
+  }
+
+  if (ingredientesQ.isLoading) {
+    return <LoadingState label="Carregando estoque..." />;
+  }
+
   return (
-    <div className="space-y-5">
-      <div className="flex items-end justify-between gap-3">
-        <h1 className="text-3xl">Estoque</h1>
-        <div className="text-right">
-          <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Valor em estoque</p>
-          <p className="font-display text-2xl text-accent">{brl(valorEstoque)}</p>
-        </div>
+    <div className="space-y-6">
+      <header className="space-y-1">
+        <h1 className="text-3xl leading-none">Estoque</h1>
+        <p className="text-sm text-muted-foreground">
+          Cadastre insumos, acompanhe o saldo em tempo real e reponha antes de esgotar.
+        </p>
+      </header>
+
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+        <KpiCard label="Valor em estoque" value={brl(valorEstoque)} icon={Wallet} tone="accent" />
+        <KpiCard label="Insumos cadastrados" value={String(ingredientes.length)} icon={Boxes} />
+        <KpiCard
+          label="Em alerta"
+          value={String(emAlerta)}
+          icon={AlertTriangle}
+          tone={emAlerta > 0 ? "destructive" : "default"}
+          sub={emAlerta > 0 ? "repor antes do evento" : "tudo em nível seguro"}
+        />
       </div>
 
       <section className="panel space-y-3 p-4">
@@ -252,7 +277,13 @@ function EstoquePage() {
           );
         })}
         {ingredientes.length === 0 && (
-          <p className="p-4 text-sm text-muted-foreground">Nenhum insumo cadastrado.</p>
+          <div className="p-4">
+            <EmptyState
+              icon={PackageOpen}
+              title="Estoque vazio"
+              description="Cadastre um insumo ou use “Criar insumos padrão” para começar com a lista da barraca."
+            />
+          </div>
         )}
       </section>
     </div>
