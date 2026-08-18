@@ -3,7 +3,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import {
+  Banknote,
+  Coins,
+  PiggyBank,
+  Receipt,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
+
 import { supabase } from "@/integrations/supabase/client";
+import { KpiCard } from "@/components/kpi-card";
+import { EmptyState } from "@/components/states";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -100,12 +111,24 @@ function FinanceiroPage() {
       <h1 className="text-3xl">Financeiro</h1>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <Kpi label="Receita bruta" value={brl(f.receitaBruta)} />
-        <Kpi label="Custos diretos (CMV)" value={brl(f.custosDiretos)} />
-        <Kpi label="Custos indiretos" value={brl(f.custosIndiretos)} />
-        <Kpi label="Lucro bruto" value={brl(f.lucroBruto)} accent />
-        <Kpi label="Lucro líquido" value={brl(f.lucroLiquido)} accent />
-        <Kpi label="Caixa" value={brl(f.caixa)} />
+        <KpiCard label="Receita bruta" value={brl(f.receitaBruta)} icon={Banknote} />
+        <KpiCard label="Custos diretos (CMV)" value={brl(f.custosDiretos)} icon={Receipt} />
+        <KpiCard label="Custos indiretos" value={brl(f.custosIndiretos)} icon={Coins} />
+        <KpiCard
+          label="Lucro bruto"
+          value={brl(f.lucroBruto)}
+          icon={TrendingUp}
+          tone={f.lucroBruto >= 0 ? "accent" : "destructive"}
+          trend={f.lucroBruto >= 0 ? "up" : "down"}
+        />
+        <KpiCard
+          label="Lucro líquido"
+          value={brl(f.lucroLiquido)}
+          icon={PiggyBank}
+          tone={f.lucroLiquido >= 0 ? "accent" : "destructive"}
+          trend={f.lucroLiquido >= 0 ? "up" : "down"}
+        />
+        <KpiCard label="Caixa" value={brl(f.caixa)} icon={Wallet} tone="primary" />
       </div>
 
       <section className="panel p-4">
@@ -235,19 +258,16 @@ function FinanceiroPage() {
             </li>
           ))}
           {despesas.length === 0 && (
-            <li className="py-2 text-muted-foreground">Nenhum lançamento.</li>
+            <li>
+              <EmptyState
+                icon={Receipt}
+                title="Nenhum lançamento"
+                description="Registre aluguel do estande, gás, embalagens e outros custos para a DRE ficar precisa."
+              />
+            </li>
           )}
         </ul>
       </section>
-    </div>
-  );
-}
-
-function Kpi({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
-  return (
-    <div className="panel p-3">
-      <p className="text-[11px] uppercase tracking-widest text-muted-foreground">{label}</p>
-      <p className={`font-display text-2xl ${accent ? "text-accent" : ""}`}>{value}</p>
     </div>
   );
 }
