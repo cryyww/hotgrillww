@@ -12,6 +12,10 @@ import {
   YAxis,
 } from "recharts";
 
+import { Crown, Flame, Package, TrendingUp } from "lucide-react";
+
+import { KpiCard } from "@/components/kpi-card";
+import { EmptyState } from "@/components/states";
 import {
   brl,
   calcularFinanceiro,
@@ -97,17 +101,32 @@ function RelatoriosPage() {
       <h1 className="text-3xl">Relatórios finais</h1>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Kpi label="Total vendido" value={brl(f.receitaBruta)} sub={`${vendas.length} unidades`} />
-        <Kpi label="Lucro final" value={brl(f.lucroLiquido)} accent />
-        <Kpi
+        <KpiCard
+          label="Total vendido"
+          value={brl(f.receitaBruta)}
+          sub={`${vendas.length} unidades`}
+          icon={Flame}
+        />
+        <KpiCard
+          label="Lucro final"
+          value={brl(f.lucroLiquido)}
+          icon={TrendingUp}
+          tone={f.lucroLiquido >= 0 ? "accent" : "destructive"}
+          trend={f.lucroLiquido >= 0 ? "up" : "down"}
+        />
+        <KpiCard
           label="Mais vendido"
           value={maisVendido?.nome ?? "—"}
-          sub={maisVendido ? `${maisVendido.unidades} un` : ""}
+          sub={maisVendido ? `${maisVendido.unidades} un` : "sem vendas"}
+          icon={Crown}
+          tone="primary"
         />
-        <Kpi
+        <KpiCard
           label="Mais lucrativo"
           value={maisLucrativo?.nome ?? "—"}
-          sub={maisLucrativo ? brl(maisLucrativo.lucro) : ""}
+          sub={maisLucrativo ? brl(maisLucrativo.lucro) : "sem vendas"}
+          icon={Package}
+          tone="accent"
         />
       </div>
 
@@ -163,7 +182,13 @@ function RelatoriosPage() {
             </li>
           ))}
           {consumo.length === 0 && (
-            <li className="py-2 text-muted-foreground">Nenhum consumo registrado.</li>
+            <li>
+              <EmptyState
+                icon={Package}
+                title="Nenhum consumo registrado"
+                description="Os insumos aparecem aqui conforme as vendas dão baixa automática no estoque."
+              />
+            </li>
           )}
         </ul>
       </section>
