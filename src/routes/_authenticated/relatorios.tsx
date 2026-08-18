@@ -195,23 +195,4 @@ function RelatoriosPage() {
     </div>
   );
 }
-
-function Kpi({
-  label,
-  value,
-  sub,
-  accent,
-}: {
-  label: string;
-  value: string;
-  sub?: string;
-  accent?: boolean;
-}) {
-  return (
-    <div className="panel p-3">
-      <p className="text-[11px] uppercase tracking-widest text-muted-foreground">{label}</p>
-      <p className={`font-display text-xl leading-tight ${accent ? "text-accent" : ""}`}>{value}</p>
-      {sub && <p className="text-xs text-muted-foreground">{sub}</p>}
-    </div>
-  );
 }
