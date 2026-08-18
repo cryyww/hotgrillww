@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { Toaster } from "@/components/ui/sonner";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -77,11 +78,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Hot Grill — Gestão da Barraca" },
+      {
+        name: "description",
+        content: "Sistema interno de vendas, estoque e finanças da barraca Hot Grill.",
+      },
+      { property: "og:title", content: "Hot Grill — Gestão da Barraca" },
+      {
+        property: "og:description",
+        content: "Sistema interno de vendas, estoque e finanças da barraca Hot Grill.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
@@ -90,6 +96,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -119,8 +131,54 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="min-h-screen pb-24">
+        <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
+          <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3">
+            <span className="grid size-9 place-items-center rounded-lg bg-primary text-lg font-display text-primary-foreground">
+              HG
+            </span>
+            <div>
+              <p className="font-display text-2xl leading-none ember-text">HOT GRILL</p>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                Gestão da Feira de Negócios
+              </p>
+            </div>
+          </div>
+        </header>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <main className="mx-auto max-w-5xl px-4 py-5">
+          <Outlet />
+        </main>
+        <NavBar />
+      </div>
+      <Toaster position="top-center" />
     </QueryClientProvider>
+  );
+}
+
+const NAV = [
+  { to: "/", label: "Vendas" },
+  { to: "/estoque", label: "Estoque" },
+  { to: "/financeiro", label: "Financeiro" },
+  { to: "/relatorios", label: "Relatórios" },
+] as const;
+
+function NavBar() {
+  return (
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur">
+      <div className="mx-auto grid max-w-5xl grid-cols-4">
+        {NAV.map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            activeOptions={{ exact: item.to === "/" }}
+            className="py-3 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground transition-colors"
+            activeProps={{ className: "text-primary" }}
+          >
+            {item.label}
+          </Link>
+        ))}
+      </div>
+    </nav>
   );
 }
