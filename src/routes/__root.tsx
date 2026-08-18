@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
-  Link,
   createRootRouteWithContext,
   useRouter,
   HeadContent,
@@ -18,16 +17,16 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">Página não encontrada</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          Essa tela não existe ou foi movida.
         </p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            Voltar ao início
           </Link>
         </div>
       </div>
@@ -46,10 +45,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          Não foi possível carregar
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Algo deu errado. Tente novamente ou volte para o início.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -59,13 +58,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            Tentar de novo
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            Voltar ao início
           </a>
         </div>
       </div>
@@ -103,7 +102,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
@@ -131,54 +130,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen pb-24">
-        <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
-          <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3">
-            <span className="grid size-9 place-items-center rounded-lg bg-primary text-lg font-display text-primary-foreground">
-              HG
-            </span>
-            <div>
-              <p className="font-display text-2xl leading-none ember-text">HOT GRILL</p>
-              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
-                Gestão da Feira de Negócios
-              </p>
-            </div>
-          </div>
-        </header>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <main className="mx-auto max-w-5xl px-4 py-5">
-          <Outlet />
-        </main>
-        <NavBar />
-      </div>
+      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      <Outlet />
       <Toaster position="top-center" />
     </QueryClientProvider>
-  );
-}
-
-const NAV = [
-  { to: "/", label: "Vendas" },
-  { to: "/estoque", label: "Estoque" },
-  { to: "/financeiro", label: "Financeiro" },
-  { to: "/relatorios", label: "Relatórios" },
-] as const;
-
-function NavBar() {
-  return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur">
-      <div className="mx-auto grid max-w-5xl grid-cols-4">
-        {NAV.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            activeOptions={{ exact: item.to === "/" }}
-            className="py-3 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground transition-colors"
-            activeProps={{ className: "text-primary" }}
-          >
-            {item.label}
-          </Link>
-        ))}
-      </div>
-    </nav>
   );
 }
