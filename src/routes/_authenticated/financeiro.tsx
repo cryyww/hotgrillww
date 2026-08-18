@@ -17,7 +17,7 @@ import {
   fetchVendas,
 } from "@/lib/hotgrill";
 
-export const Route = createFileRoute("/financeiro")({
+export const Route = createFileRoute("/_authenticated/financeiro")({
   head: () => ({
     meta: [
       { title: "Financeiro — Hot Grill" },

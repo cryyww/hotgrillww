@@ -16,7 +16,7 @@ import {
   type Ingrediente,
 } from "@/lib/hotgrill";
 
-export const Route = createFileRoute("/estoque")({
+export const Route = createFileRoute("/_authenticated/estoque")({
   head: () => ({
     meta: [
       { title: "Estoque — Hot Grill" },
