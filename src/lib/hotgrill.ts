@@ -247,3 +247,39 @@ export function calcularFinanceiro(params: {
     lucrosAcumulados: lucroLiquido,
   };
 }
+export async function excluirVenda(id: string) {
+  const { data: itens, error: e1 } = await supabase
+    .from("itens_venda")
+    .select("ingrediente_id, quantidade")
+    .eq("venda_id", id);
+  if (e1) throw e1;
+
+  for (const item of itens ?? []) {
+    const { data: ing } = await supabase
+      .from("ingredientes")
+      .select("quantidade_atual")
+      .eq("id", item.ingrediente_id)
+      .maybeSingle();
+    if (ing) {
+      const { error } = await supabase
+        .from("ingredientes")
+        .update({ quantidade_atual: Number(ing.quantidade_atual) + Number(item.quantidade) })
+        .eq("id", item.ingrediente_id);
+      if (error) throw error;
+    }
+  }
+
+  const del = async (table: "movimentacoes_estoque" | "itens_venda") => {
+    const { error } = await supabase.from(table).delete().eq("venda_id", id);
+    if (error) throw error;
+  };
+  await del("movimentacoes_estoque");
+  await del("itens_venda");
+
+  const { error } = await supabase.from("vendas").delete().eq("id", id);
+  if (error) throw error;
+}
+
+export async function excluirTodasVendas(ids: string[]) {
+  for (const id of ids) await excluirVenda(id);
+}
