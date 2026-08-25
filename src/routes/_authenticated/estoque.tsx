@@ -258,10 +258,11 @@ function EstoquePage() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => repor.mutate({ ing: i, qtd: i.unidade === "g" ? 500 : 10 })}
+                    onClick={() => repor.mutate({ ing: i, qtd: 10 })}
                   >
-                    +{i.unidade === "g" ? "500g" : "10"}
+                    +10
                   </Button>
+
                   <Button variant="ghost" size="sm" onClick={() => remover.mutate(i.id)}>
                     Excluir
                   </Button>
