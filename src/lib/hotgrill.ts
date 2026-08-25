@@ -37,38 +37,61 @@ export type ItemVenda = {
   custo: number;
 };
 
-export const UNIDADES = ["un", "g", "kg", "ml", "l"] as const;
+export const UNIDADES = ["un"] as const;
 
 export const FORMAS_PAGAMENTO = ["Pix", "Dinheiro", "Débito", "Crédito"] as const;
 export type FormaPagamento = (typeof FORMAS_PAGAMENTO)[number];
 
-export const PRODUTOS = [
-  { nome: "Hot Dog Personalizado", valor: 15, montagem: true },
-  { nome: "Combo", valor: 20, montagem: true },
-  { nome: "Refrigerante", valor: 6, montagem: false, insumo: "Refrigerante", qtd: 1 },
-  { nome: "Trufa", valor: 5, montagem: false, insumo: "Trufa", qtd: 1 },
-] as const;
+export const PAO = "Pão";
+export const SALSICHA = "Salsicha";
+export const BEBIDA = "Bebida 200ml";
 
-export const BASE_INSUMOS = [
-  { nome: "Pão", unidade: "un" },
-  { nome: "Salsicha", unidade: "un" },
-] as const;
+export type ProdutoDef = {
+  nome: string;
+  valor: number;
+  insumos: { nome: string; qtd: number }[];
+};
 
-export const ADICIONAIS_INSUMOS = [
-  { nome: "Bacon", unidade: "g" },
-  { nome: "Cheddar", unidade: "g" },
-  { nome: "Milho", unidade: "g" },
-  { nome: "Molho", unidade: "g" },
-  { nome: "Purê", unidade: "g" },
-  { nome: "Batata palha", unidade: "g" },
-] as const;
+export const PRODUTOS: ProdutoDef[] = [
+  {
+    nome: "Cachorro-Quente Padrão",
+    valor: 12.5,
+    insumos: [
+      { nome: PAO, qtd: 1 },
+      { nome: SALSICHA, qtd: 1 },
+    ],
+  },
+  {
+    nome: "Cachorro-Quente Completo + Bebida",
+    valor: 15,
+    insumos: [
+      { nome: PAO, qtd: 1 },
+      { nome: SALSICHA, qtd: 1 },
+      { nome: BEBIDA, qtd: 1 },
+    ],
+  },
+  {
+    nome: "Cachorro-Quente Padrão + Bebida",
+    valor: 14.5,
+    insumos: [
+      { nome: PAO, qtd: 1 },
+      { nome: SALSICHA, qtd: 1 },
+      { nome: BEBIDA, qtd: 1 },
+    ],
+  },
+  {
+    nome: "Bebida 200ml",
+    valor: 2,
+    insumos: [{ nome: BEBIDA, qtd: 1 }],
+  },
+];
 
 export const INSUMOS_PADRAO = [
-  ...BASE_INSUMOS,
-  ...ADICIONAIS_INSUMOS,
-  { nome: "Refrigerante", unidade: "un" },
-  { nome: "Trufa", unidade: "un" },
+  { nome: PAO, unidade: "un" },
+  { nome: SALSICHA, unidade: "un" },
+  { nome: BEBIDA, unidade: "un" },
 ];
+
 
 export const CATEGORIAS_DESPESA = [
   { value: "indireta", label: "Custo indireto" },
