@@ -37,7 +37,7 @@ export type ItemVenda = {
   custo: number;
 };
 
-export const UNIDADES = ["un"] as const;
+export const UNIDADES = ["un", "ml"] as const;
 
 export const FORMAS_PAGAMENTO = ["Pix", "Dinheiro", "Débito", "Crédito"] as const;
 export type FormaPagamento = (typeof FORMAS_PAGAMENTO)[number];
