@@ -5,6 +5,17 @@ import { toast } from "sonner";
 import { Flame, Loader2, Receipt, ShoppingBag, Trash2, TrendingUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { KpiCard } from "@/components/kpi-card";
@@ -254,18 +265,28 @@ function VendasPage() {
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl">Últimas vendas</h2>
           {vendas.length > 0 && (
-            <Button
-              variant="destructive"
-              size="sm"
-              disabled={apagarTudo.isPending}
-              onClick={() => {
-                if (confirm("Apagar TODOS os registros de vendas e devolver o estoque?")) {
-                  apagarTudo.mutate(vendas.map((v) => v.id));
-                }
-              }}
-            >
-              <Trash2 className="size-4" /> Apagar tudo
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm" disabled={apagarTudo.isPending}>
+                  <Trash2 className="size-4" /> Apagar tudo
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Apagar todas as vendas?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Todos os registros de vendas serão removidos e o estoque devolvido. Não dá para
+                    desfazer.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => apagarTudo.mutate(vendas.map((v) => v.id))}>
+                    Apagar tudo
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
         </div>
         <ul className="mt-2 divide-y divide-border text-sm">
@@ -279,17 +300,32 @@ function VendasPage() {
               </span>
               <span className="flex items-center gap-2">
                 <span className="font-semibold">{brl(Number(v.valor))}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Apagar venda"
-                  disabled={apagar.isPending}
-                  onClick={() => {
-                    if (confirm("Apagar este registro de venda?")) apagar.mutate(v.id);
-                  }}
-                >
-                  <Trash2 className="size-4 text-destructive" />
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label="Apagar venda"
+                      disabled={apagar.isPending}
+                    >
+                      <Trash2 className="size-4 text-destructive" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Apagar este registro?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        A venda será removida e os insumos voltam para o estoque.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => apagar.mutate(v.id)}>
+                        Apagar
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </span>
             </li>
           ))}

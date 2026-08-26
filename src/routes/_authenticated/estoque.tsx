@@ -48,6 +48,7 @@ function EstoquePage() {
   const [quantidade, setQuantidade] = useState("");
   const [valorUnitario, setValorUnitario] = useState("");
   const [minimo, setMinimo] = useState("");
+  const [reporQtd, setReporQtd] = useState<Record<string, string>>({});
 
   const num = (v: string) => Number(v.replace(",", ".")) || 0;
   const total = num(quantidade) * num(valorUnitario);
@@ -124,8 +125,9 @@ function EstoquePage() {
         .from("movimentacoes_estoque")
         .insert({ ingrediente_id: ing.id, quantidade: qtd, tipo: "entrada_compra" });
     },
-    onSuccess: () => {
-      toast.success("Estoque reposto");
+    onSuccess: (_d, vars) => {
+      toast.success(`+${vars.qtd} em ${vars.ing.nome}`);
+      setReporQtd((s) => ({ ...s, [vars.ing.id]: "" }));
       invalidate();
     },
     onError: (e: Error) => toast.error(e.message),
@@ -254,7 +256,22 @@ function EstoquePage() {
                     {i.unidade}
                   </p>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex items-center gap-1">
+                  <Input
+                    inputMode="decimal"
+                    placeholder="Qtd"
+                    aria-label={`Quantidade a adicionar em ${i.nome}`}
+                    value={reporQtd[i.id] ?? ""}
+                    onChange={(e) => setReporQtd((s) => ({ ...s, [i.id]: e.target.value }))}
+                    className="h-9 w-20 text-center"
+                  />
+                  <Button
+                    size="sm"
+                    disabled={repor.isPending || num(reporQtd[i.id] ?? "") <= 0}
+                    onClick={() => repor.mutate({ ing: i, qtd: num(reporQtd[i.id] ?? "") })}
+                  >
+                    Adicionar
+                  </Button>
                   <Button
                     variant="secondary"
                     size="sm"
