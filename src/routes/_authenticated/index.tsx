@@ -300,17 +300,32 @@ function VendasPage() {
               </span>
               <span className="flex items-center gap-2">
                 <span className="font-semibold">{brl(Number(v.valor))}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Apagar venda"
-                  disabled={apagar.isPending}
-                  onClick={() => {
-                    if (confirm("Apagar este registro de venda?")) apagar.mutate(v.id);
-                  }}
-                >
-                  <Trash2 className="size-4 text-destructive" />
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label="Apagar venda"
+                      disabled={apagar.isPending}
+                    >
+                      <Trash2 className="size-4 text-destructive" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Apagar este registro?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        A venda será removida e os insumos voltam para o estoque.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => apagar.mutate(v.id)}>
+                        Apagar
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </span>
             </li>
           ))}
