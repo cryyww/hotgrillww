@@ -254,7 +254,22 @@ function EstoquePage() {
                     {i.unidade}
                   </p>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex items-center gap-1">
+                  <Input
+                    inputMode="decimal"
+                    placeholder="Qtd"
+                    aria-label={`Quantidade a adicionar em ${i.nome}`}
+                    value={reporQtd[i.id] ?? ""}
+                    onChange={(e) => setReporQtd((s) => ({ ...s, [i.id]: e.target.value }))}
+                    className="h-9 w-20 text-center"
+                  />
+                  <Button
+                    size="sm"
+                    disabled={repor.isPending || num(reporQtd[i.id] ?? "") <= 0}
+                    onClick={() => repor.mutate({ ing: i, qtd: num(reporQtd[i.id] ?? "") })}
+                  >
+                    Adicionar
+                  </Button>
                   <Button
                     variant="secondary"
                     size="sm"
