@@ -48,6 +48,7 @@ function EstoquePage() {
   const [quantidade, setQuantidade] = useState("");
   const [valorUnitario, setValorUnitario] = useState("");
   const [minimo, setMinimo] = useState("");
+  const [reporQtd, setReporQtd] = useState<Record<string, string>>({});
 
   const num = (v: string) => Number(v.replace(",", ".")) || 0;
   const total = num(quantidade) * num(valorUnitario);
