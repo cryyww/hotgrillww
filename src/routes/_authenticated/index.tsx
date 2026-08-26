@@ -265,18 +265,28 @@ function VendasPage() {
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl">Últimas vendas</h2>
           {vendas.length > 0 && (
-            <Button
-              variant="destructive"
-              size="sm"
-              disabled={apagarTudo.isPending}
-              onClick={() => {
-                if (confirm("Apagar TODOS os registros de vendas e devolver o estoque?")) {
-                  apagarTudo.mutate(vendas.map((v) => v.id));
-                }
-              }}
-            >
-              <Trash2 className="size-4" /> Apagar tudo
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm" disabled={apagarTudo.isPending}>
+                  <Trash2 className="size-4" /> Apagar tudo
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Apagar todas as vendas?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Todos os registros de vendas serão removidos e o estoque devolvido. Não dá para
+                    desfazer.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => apagarTudo.mutate(vendas.map((v) => v.id))}>
+                    Apagar tudo
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
         </div>
         <ul className="mt-2 divide-y divide-border text-sm">
