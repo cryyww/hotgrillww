@@ -125,8 +125,9 @@ function EstoquePage() {
         .from("movimentacoes_estoque")
         .insert({ ingrediente_id: ing.id, quantidade: qtd, tipo: "entrada_compra" });
     },
-    onSuccess: () => {
-      toast.success("Estoque reposto");
+    onSuccess: (_d, vars) => {
+      toast.success(`+${vars.qtd} em ${vars.ing.nome}`);
+      setReporQtd((s) => ({ ...s, [vars.ing.id]: "" }));
       invalidate();
     },
     onError: (e: Error) => toast.error(e.message),
