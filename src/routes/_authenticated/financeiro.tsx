@@ -58,7 +58,7 @@ function FinanceiroPage() {
     despesas,
     ingredientes,
     capitalSocial: Number(config?.capital_social ?? 0),
-    aliquota: Number(config?.aliquota_imposto ?? 0),
+    aliquota: 0,
   });
 
   const [descricao, setDescricao] = useState("");
@@ -135,7 +135,7 @@ function FinanceiroPage() {
         <h2 className="text-xl">DRE automática</h2>
         <div className="mt-2 space-y-1 text-sm">
           <Linha label="Receita Bruta" valor={f.receitaBruta} />
-          <Linha label="(-) Impostos" valor={-f.impostos} />
+          
           <Linha label="(-) CMV" valor={-f.cmv} />
           <Linha label="= Lucro Bruto" valor={f.lucroBruto} destaque />
           <Linha label="(-) Despesas Operacionais" valor={-f.despesasOperacionais} />
@@ -184,21 +184,6 @@ function FinanceiroPage() {
               defaultValue={String(config?.capital_social ?? 0)}
               onBlur={(e) =>
                 salvarConfig.mutate({ capital_social: Number(e.target.value.replace(",", ".")) || 0 })
-              }
-            />
-          </div>
-          <div>
-            <Label className="text-xs uppercase tracking-widest text-muted-foreground">
-              Alíquota de imposto (%)
-            </Label>
-            <Input
-              className="mt-1"
-              inputMode="decimal"
-              defaultValue={String(config?.aliquota_imposto ?? 0)}
-              onBlur={(e) =>
-                salvarConfig.mutate({
-                  aliquota_imposto: Number(e.target.value.replace(",", ".")) || 0,
-                })
               }
             />
           </div>

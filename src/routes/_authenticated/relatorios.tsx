@@ -59,7 +59,7 @@ function RelatoriosPage() {
     despesas,
     ingredientes,
     capitalSocial: Number(config?.capital_social ?? 0),
-    aliquota: Number(config?.aliquota_imposto ?? 0),
+    aliquota: 0,
   });
 
   const porProduto = new Map<string, { unidades: number; receita: number; lucro: number }>();
