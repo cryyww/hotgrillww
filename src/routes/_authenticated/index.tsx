@@ -252,7 +252,7 @@ function VendasPage() {
                 <Button
                   key={f}
                   size="lg"
-                  disabled={venda.isPending}
+                  disabled={venda.isPending || semEstoque}
                   onClick={() => venda.mutate(f)}
                   className="h-14 font-display text-xl ember-glow"
                 >
