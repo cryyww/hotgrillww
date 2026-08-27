@@ -83,6 +83,16 @@ function VendasPage() {
   };
 
   const itensAtuais = itensMontagem();
+  const faltando = produtoAtual.insumos
+    .map((insumo) => {
+      const ing = porNome.get(insumo.nome.toLowerCase());
+      if (!ing) return `${insumo.nome} (não cadastrado)`;
+      if (Number(ing.quantidade_atual) < insumo.qtd)
+        return `${ing.nome} (${Number(ing.quantidade_atual)} ${ing.unidade})`;
+      return null;
+    })
+    .filter(Boolean) as string[];
+  const semEstoque = faltando.length > 0;
   const custoEstimado = itensAtuais.reduce((s, item) => {
     const ing = ingredientes.find((i) => i.id === item.ingrediente_id);
     return s + (ing ? Number(ing.valor_unitario) * item.quantidade : 0);
@@ -242,7 +252,7 @@ function VendasPage() {
                 <Button
                   key={f}
                   size="lg"
-                  disabled={venda.isPending}
+                  disabled={venda.isPending || semEstoque}
                   onClick={() => venda.mutate(f)}
                   className="h-14 font-display text-xl ember-glow"
                 >
@@ -252,6 +262,12 @@ function VendasPage() {
               ))}
             </div>
           </div>
+
+          {semEstoque && ingredientes.length > 0 && (
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+              Estoque insuficiente: {faltando.join(" · ")} — reponha no Estoque para vender.
+            </p>
+          )}
 
           {ingredientes.length === 0 && (
             <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
