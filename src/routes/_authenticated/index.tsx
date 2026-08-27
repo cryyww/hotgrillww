@@ -263,6 +263,12 @@ function VendasPage() {
             </div>
           </div>
 
+          {semEstoque && ingredientes.length > 0 && (
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+              Estoque insuficiente: {faltando.join(" · ")} — reponha no Estoque para vender.
+            </p>
+          )}
+
           {ingredientes.length === 0 && (
             <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
               Nenhum insumo cadastrado — cadastre o estoque para a baixa automática funcionar.
