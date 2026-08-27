@@ -96,7 +96,7 @@ export const INSUMOS_PADRAO = [
 export const CATEGORIAS_DESPESA = [
   { value: "indireta", label: "Custo indireto" },
   { value: "operacional", label: "Despesa operacional" },
-  { value: "imposto", label: "Imposto" },
+  
   { value: "fornecedor", label: "Fornecedor" },
 ] as const;
 
