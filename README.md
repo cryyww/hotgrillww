@@ -1,188 +1,119 @@
-# Hot Dog Master
+<div align="center">
 
-Crie um sistema web interno chamado "Hot Grill" para gestão operacional e financeira de uma barraca de hot dog personalizado durante uma Feira de Negócios. O sistema será usado exclusivamente pela equipe interna (não é voltado ao cliente final).
+# 🌭 Hot Grill
 
-CONTEXTO DO NEGÓCIO
+**Gestão operacional e financeira de uma barraca de hot dog personalizado.**
 
-O produto principal é o Hot Dog Personalizado: cada cliente escolhe ingredientes diferentes. Por isso, o sistema NÃO pode registrar apenas "1 hot dog vendido" — cada venda precisa registrar exatamente os ingredientes consumidos, senão o estoque, o custo e o lucro ficam incorretos.
+Sistema web interno criado para a equipe de uma barraca em uma Feira de Negócios: cada venda registra os ingredientes exatos usados, e o estoque, o custo e o lucro se atualizam sozinhos.
 
-1. CADASTRO DE ESTOQUE
+![Status](https://img.shields.io/badge/status-em%20uso-F97316?style=for-the-badge)
+![React](https://img.shields.io/badge/React-19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 
-Tela para cadastrar produtos/insumos com os campos:
+</div>
 
-- Nome do produto
+---
 
-- Quantidade comprada
+## 💡 O problema
 
-- Unidade de medida (un, g, kg, ml, l)
+No hot dog personalizado, cada cliente escolhe ingredientes diferentes. Registrar só "1 hot dog vendido" deixa o estoque, o custo e o lucro errados. O Hot Grill resolve isso registrando **cada ingrediente consumido em cada venda**.
 
-- Valor unitário
+## ✨ Funcionalidades
 
-- Valor total (calculado automaticamente)
+| Módulo | O que faz |
+| --- | --- |
+| 📦 **Estoque** | Cadastro de insumos com quantidade, unidade, valor unitário e estoque mínimo. O valor total é calculado automaticamente |
+| 🛒 **Vendas** | Registro de hot dog personalizado (montado por ingrediente), combo, refrigerante e trufa, com a forma de pagamento |
+| 🔄 **Baixa automática** | Cada venda desconta do estoque os ingredientes usados e guarda o histórico de movimentações |
+| 🚫 **Trava de estoque** | Impede vender o que não tem estoque disponível |
+| 💰 **Financeiro** | Controle de despesas, CMV e margem por venda |
+| 📊 **DRE e balanço** | Demonstrativo de resultado e balanço patrimonial calculados a partir dos dados lançados |
+| 📈 **Relatórios** | Resumo das vendas por produto e por forma de pagamento (Pix, dinheiro e cartão) |
+| 🔐 **Acesso da equipe** | Login restrito, com área interna protegida |
 
-Deve listar estoque inicial e ser base para a baixa automática.
+## 🛠️ Tecnologias
 
-2. SISTEMA DE VENDAS
+- **Front-end:** React 19, TypeScript, TanStack Start e TanStack Router
+- **Interface:** Tailwind CSS 4, Radix UI e gráficos com Recharts
+- **Back-end e banco:** Supabase (PostgreSQL, autenticação e migrations versionadas)
+- **Build e ferramentas:** Vite, Bun, ESLint e Prettier
 
-Tela de registro de vendas com os produtos:
+## 🗄️ Modelo de dados
 
-- Hot Dog Personalizado (com montagem por ingrediente)
+| Tabela | Função |
+| --- | --- |
+| `ingredientes` | Insumos, quantidade atual, valor unitário e estoque mínimo |
+| `vendas` | Cada venda, com valor, forma de pagamento e CMV |
+| `itens_venda` | Ingredientes consumidos em cada venda e seu custo |
+| `movimentacoes_estoque` | Histórico de entradas e baixas |
+| `despesas` | Despesas pagas e a pagar, por categoria |
+| `configuracoes` | Parâmetros do sistema |
+| `user_roles` | Papéis de acesso dos usuários |
 
-- Combo
+## 🚀 Como rodar localmente
 
-- Refrigerante
+### Pré-requisitos
 
-- Trufa
+- [Git](https://git-scm.com/)
+- [Bun](https://bun.sh/)
+- Um projeto no [Supabase](https://supabase.com/)
 
-Para o Hot Dog Personalizado, ao registrar a venda, permitir escolher:
+### Passo a passo
 
-Base (obrigatório):
+```bash
+# 1. Clone o repositório
+git clone https://github.com/cryyww/hotgrillww.git
+cd hotgrillww
 
-- Quantidade de pão
+# 2. Instale as dependências
+bun install
 
-- Quantidade de salsicha
+# 3. Configure as variáveis de ambiente
+cp .env.example .env
+# edite o .env com os dados do seu projeto Supabase
 
-Adicionais (opcional, em gramas):
+# 4. Aplique as migrations (pasta supabase/migrations) no seu projeto Supabase
 
-- Bacon
-
-- Cheddar
-
-- Milho
-
-- Molho
-
-- Purê
-
-- Batata palha
-
-Campos gerais de cada venda:
-
-- Produto
-
-- Valor
-
-- Forma de pagamento (Pix, Dinheiro, Débito, Crédito)
-
-- Horário (automático, timestamp da venda)
-
-Ao confirmar a venda, o sistema deve dar baixa automática no estoque dos ingredientes usados.
-
-3. CONTROLE AUTOMÁTICO DE ESTOQUE
-
-- Exibir estoque inicial e estoque restante em tempo real
-
-- Gerar alertas visuais quando um item estiver com estoque baixo (definir limite mínimo por item)
-
-- Toda venda confirmada deve reduzir o estoque automaticamente, sem input manual
-
-4. MÓDULO FINANCEIRO
-
-Calcular e exibir em tempo real:
-
-- Receita Bruta
-
-- Custos Diretos
-
-- Custos Indiretos
-
-- Lucro Bruto
-
-- Lucro Líquido
-
-5. DRE AUTOMÁTICA
-
-Gerar demonstrativo no formato:
-
-Receita Bruta
-
-(-) Impostos
-
-(-) CMV (Custo da Mercadoria Vendida)
-
-= Lucro Bruto
-
-(-) Despesas Operacionais
-
-= Lucro Líquido
-
-6. BALANÇO PATRIMONIAL AUTOMÁTICO
-
-ATIVO:
-
-- Caixa
-
-- Estoque
-
-- Contas a receber
-
-PASSIVO:
-
-- Fornecedores
-
-- Obrigações
-
-PATRIMÔNIO LÍQUIDO:
-
-- Capital Social
-
-- Lucros Acumulados
-
-7. RELATÓRIOS FINAIS
-
-Dashboard/relatório com:
-
-- Total vendido (R$ e unidades)
-
-- Produto mais vendido
-
-- Produto mais lucrativo
-
-- Receita por Pix
-
-- Receita por cartão (débito + crédito)
-
-- Receita por dinheiro
-
-- Lucro final
-
-- Estoque consumido (por ingrediente)
-
-REQUISITOS TÉCNICOS E DE UX
-
-- Interface simples, rápida e otimizada para uso em tablet/celular durante o evento (equipe vai operar em pé, no caixa, com movimento)
-
-- Fluxo de registro de venda deve ser o mais rápido possível (poucos cliques)
-
-- Usar Supabase como backend para persistência dos dados (estoque, vendas, financeiro)
-
-- Dashboard com gráficos simples para os relatórios (vendas por forma de pagamento, produto mais vendido, etc.)
-
-- Todos os cálculos (estoque, DRE, balanço, lucro) devem ser automáticos, sem necessidade de digitação manual de totais
-
-- não necessario autentificação, uso apenas interno, sem login nem nada.
-
-Comece pela estrutura de dados (tabelas de produtos, ingredientes, vendas, venda_ingredientes, movimentações de estoque e transações financeiras) e depois construa as telas de Estoque e Vendas primeiro, já que são a base para todo o resto funcionar.
-
-This project was built with [Lovable](https://lovable.dev).
-
-**Live app**: https://hotdog-hq.lovable.app
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/cb921522-404a-4d15-a7f5-a1371f8199a1).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+# 5. Inicie o servidor de desenvolvimento
+bun run dev
 ```
+
+### Variáveis de ambiente
+
+| Variável | Descrição |
+| --- | --- |
+| `SUPABASE_URL` / `VITE_SUPABASE_URL` | URL do projeto Supabase |
+| `SUPABASE_PUBLISHABLE_KEY` / `VITE_SUPABASE_PUBLISHABLE_KEY` | Chave pública do Supabase |
+| `SUPABASE_PROJECT_ID` / `VITE_SUPABASE_PROJECT_ID` | ID do projeto Supabase |
+| `SUPABASE_SERVICE_ROLE_KEY` | Chave de serviço, usada só no servidor. **Nunca a envie para o Git** |
+
+### Scripts
+
+| Comando | Função |
+| --- | --- |
+| `bun run dev` | Servidor de desenvolvimento |
+| `bun run build` | Build de produção |
+| `bun run lint` | Análise com ESLint |
+
+## 🗂️ Estrutura
+
+```text
+src/
+├── routes/
+│   ├── auth.tsx            # Login da equipe
+│   └── _authenticated/     # Vendas, estoque, financeiro e relatórios
+├── integrations/supabase/  # Cliente e autenticação
+├── components/             # KPIs e estados de tela
+└── lib/hotgrill.ts         # Tipos e regras do negócio
+supabase/
+└── migrations/             # Estrutura do banco de dados
+```
+
+## 👤 Autor
+
+**Gabriel Bomfim**: desenvolvedor full stack júnior e estudante de Sistemas de Informação.
+
+[![GitHub](https://img.shields.io/badge/GitHub-cryyww-181717?style=flat-square&logo=github)](https://github.com/cryyww)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Gabriel%20Bomfim-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/gabriel-bomfim-3082362b3)
